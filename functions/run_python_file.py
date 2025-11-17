@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 
 def run_python_file(working_directory, file_path, args=[]):
@@ -10,3 +11,15 @@ def run_python_file(working_directory, file_path, args=[]):
         return f'Error: File "{file_path}" not found.'
     if not file_path.endswith(".py"):
         return f'Error: "{file_path}" is not a Python file.'
+    try:
+        subprocess.run(
+            abs_file_path,
+            stdin=True,
+            stdout=True,
+            stderr=True,
+            timeout=30,
+        )
+        return subprocess.CompletedProcess
+
+    except Exception as e:
+        return f"Error: {e}"
