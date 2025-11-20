@@ -6,7 +6,6 @@ from google import genai
 from google.genai import types
 
 from call_functions import available_functions
-from functions.get_files_info import schema_get_files_info
 from prompts import system_prompt
 
 
