@@ -13,12 +13,10 @@ def run_python_file(working_directory, file_path, args=[]):
         return f'Error: "{file_path}" is not a Python file.'
     try:
 
-        # ---- Build command ----
         commands = ["python", abs_file_path]
         if args:
             commands.extend(args)
 
-        # ---- Run subprocess ----
         result = subprocess.run(commands, capture_output=True, text=True, cwd=abs_working_directory, timeout=30)
         print(result)
 
