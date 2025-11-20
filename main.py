@@ -50,7 +50,6 @@ def generate_content(client, messages, verbose):
         print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
     print("Response:")
-    # print(response)
 
     if not response.function_calls:
         return response.text
