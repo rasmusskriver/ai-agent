@@ -5,22 +5,9 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-# from functions.get_files_info import schema_get_files_info
+from call_functions import available_functions
+from functions.get_files_info import schema_get_files_info
 from prompts import system_prompt
-
-schema_get_files_info = types.FunctionDeclaration(
-    name="get_files_info",
-    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "directory": types.Schema(
-                type=types.Type.STRING,
-                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
-            ),
-        },
-    ),
-)
 
 
 def main():
@@ -54,11 +41,6 @@ def main():
 
 
 def generate_content(client, messages, verbose):
-    available_functions = types.Tool(
-        function_declarations=[
-            schema_get_files_info,
-        ]
-    )
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=messages,
@@ -70,11 +52,12 @@ def generate_content(client, messages, verbose):
 
     print("Response:")
     # print(response)
-    if response.function_calls is None:
-        print(response.text)
-    else:
-        for func in response.function_calls:
-            print(func)
+
+    if not response.function_calls:
+        return response.text
+
+    for function_call_part in response.function_calls:
+        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
 
 
 if __name__ == "__main__":
